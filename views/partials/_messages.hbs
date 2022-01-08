@@ -1,0 +1,15 @@
+{{#if errors.length}}
+  {{#each errors}}
+    <div class="message">
+      <p>{{msg}}</p>
+      <button type="button" class="close">X</button>
+    </div>
+  {{/each}}
+{{/if}}
+
+{{#if success}}
+  <div class="message success">
+    <p>{{success}}</p>
+    <button type="button" class="close">X</button>
+  </div>
+{{/if}}

@@ -1,0 +1,25 @@
+<div class="card">
+  <h1 class="form-title"><i class="fas fa-user-plus"></i>Register</h1>
+  {{>_messages}}
+  <form action="/users/register" method="POST">
+    {{!-- When specified with no attributes, with no action data as below, the <form> data is sent to the same page that the form is present on: --}}
+    <div class="form-control">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" name="name" placeholder="Enter Name" value="{{inputValue name}}" />
+    </div>
+    <div class="form-control">
+      <label for="email" class="form-label">Email</label>
+      <input type="text" name="email" placeholder="Enter Email" value="{{inputValue email}}" />
+    </div>
+    <div class="form-control">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" name="password" placeholder="Enter Password" value="{{inputValue password}}" />
+    </div>
+    <div class="form-control">
+      <label for="password2" class="form-label">Confirm Password</label>
+      <input type="password" name="password2" placeholder="Confirm Password" value="{{inputValue password2}}" />
+    </div>
+    <div class="actions"><button type='submit' class="register">Register</a></div>
+    <p class="form-paragraph">Have an account? <a href="/users/login" class="">Login</a></p>
+  </form>
+</div>
