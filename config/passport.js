@@ -6,7 +6,7 @@ module.exports = (passport) => {
   const verifyCallback = async (email, password, done) => {
     const user = await User.findOne({ email: email });
     if (!user) {
-      return done(null, false); // done() function takes an error as the first argument and boolean as second. Here we're saying, no there is no error (null), but also there is no user(false). Passport probably returns Unauthorized 401 status code
+      return done(null, false, { message: "That email is not registered!" }); // done() function takes an error as the first argument and boolean as second. Here we're saying, no there is no error (null), but also there is no user(false). Passport probably returns Unauthorized 401 status code
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -14,7 +14,8 @@ module.exports = (passport) => {
     if (isMatch) {
       return done(null, user); // when we pass this to the passport it's going to let us into the route
     } else {
-      return done(null, false);
+      return done(null, false, { message: "The password is incorrect" });
+      // The messages should be more generic, like "Unable to sign in"
     }
   };
 

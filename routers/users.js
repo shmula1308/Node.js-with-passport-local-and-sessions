@@ -49,7 +49,6 @@ router.post("/register", async (req, res) => {
   }
   // Check if user email already exists
   const user = await User.findOne({ email: email });
-
   if (user) {
     // Render an error if it does
     errors.push({ msg: "Email already exists!" });
@@ -73,15 +72,19 @@ router.post("/register", async (req, res) => {
   // Create the new user and save them to database
   const newUser = new User(userData);
   await newUser.save();
-  res.render("login", {
-    success: "You are now registered and can login!",
-  });
+  // res.render("login", {
+  //   success: "You are now registered and can login!",
+  // });
+  //req.flash() is called just before the redirect. The success global variable is now populated with  "You are now registerd and can log in!". When "login" page is rendered.the messages partial has access to the global variable success and error which we set up in app.js
+  req.flash("success_msg", "You are now registerd and can log in!");
+  res.redirect("/users/login");
 });
 
 // @desc Logout user
 // @route GET /users/logout
 router.get("/logout", (req, res) => {
   req.logout();
+  req.flash("success_msg", "You have been logged out");
   res.redirect("/users/login");
 });
 
@@ -90,8 +93,9 @@ router.get("/logout", (req, res) => {
 router.post(
   "/login",
   passport.authenticate("local", {
-    failureRedirect: "login",
     successRedirect: "/dashboard",
+    failureRedirect: "/users/login",
+    failureFlash: true, // if you fail to login the error will be placed in res.locals.error. You have to attach req.flash() with the message. Remember it has to be error not error-message
   })
 );
 

@@ -5,7 +5,10 @@ const express = require("express");
 const dotenv = require("dotenv");
 const passport = require("passport");
 
+// flash is stored in session. They work together
+const flash = require("connect-flash");
 const session = require("express-session");
+
 const mongoose = require("mongoose");
 const connectDB = require("./config/mongoose");
 const MongoStore = require("connect-mongo");
@@ -45,7 +48,7 @@ const sessionStore = MongoStore.create({
 app.use(
   session({
     secret: process.env.SECRET,
-    resave: false, //we don't want to save the session if nothing is modified
+    resave: false, //we don't want to resave the session if nothing is modified
     saveUninitialized: false, //dont create a session until something is stored
     store: sessionStore,
     cookie: {
@@ -57,6 +60,18 @@ app.use(
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
+// after adding this middleware we will have access to req.flash()
+
+// Global variable
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error"); // this is used in conjuction with failureFlash: true, in users.js --> router.post("/login",). error variable is set by passport
+  next();
+});
+// Read more
+//https://newbedev.com/how-to-create-global-variables-accessible-in-all-views-using-express-node-js
 
 // Routes
 app.use("/", require("./routers/index"));

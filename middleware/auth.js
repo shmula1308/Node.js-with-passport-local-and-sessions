@@ -3,7 +3,8 @@ module.exports = {
     if (req.isAuthenticated()) {
       return next();
     } else {
-      res.redirect("/");
+      req.flash("error_msg", "Please authenticate");
+      res.redirect("/users/login");
     }
   },
   ensureGuest: function (req, res, next) {
